@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAINTS – Syriac Accounts Investigated through Novel Tools of Stemmatology</title>
+<meta name="description" content="SAINTS is a Marie Skłodowska-Curie Global Fellowship (Horizon Europe, grant agreement No 101264992) on Byzantine lives of saints in the Syriac tradition.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&family=Noto+Sans+Syriac:wght@400;600&display=swap">
+<style>
+:root{
+  --gold:#c9a14a; --gold-light:#ead39a; --gold-dark:#9b7426;
+  --bg:#f7f3ea; --panel:#fffdf8; --ink:#2a2118; --muted:#6c5f50; --line:#e2d8c6; --soft:#efe7d8;
+  --rubric:#9b2a1c; --rubric-soft:#f4e1da; --nav:#2a2118; --nav-ink:#f7f3ea; --tbc-bg:#fff4c2; --tbc-ink:#5c4700;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1713; --panel:#241f19; --ink:#efe6d6; --muted:#b5a690; --line:#3a3128; --soft:#2c261f;
+  --rubric:#e07a62; --rubric-soft:#3b2620; --nav:#120f0c; --nav-ink:#efe6d6; --tbc-bg:#4a3d0a; --tbc-ink:#fbe9a3; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#1b1713; --panel:#241f19; --ink:#efe6d6; --muted:#b5a690; --line:#3a3128; --soft:#2c261f;
+  --rubric:#e07a62; --rubric-soft:#3b2620; --nav:#120f0c; --nav-ink:#efe6d6; --tbc-bg:#4a3d0a; --tbc-ink:#fbe9a3; color-scheme:dark }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Alegreya Sans",system-ui,sans-serif}
+a{color:var(--rubric)} a:hover{text-decoration-thickness:2px}
+h1,h2,h3{font-family:Alegreya,Georgia,serif;font-weight:500;line-height:1.2;text-wrap:balance;margin:0 0 .5em}
+h1{font-size:clamp(2rem,5vw,3.1rem)} h2{font-size:1.9rem} h3{font-size:1.3rem}
+p{margin:0 0 1em}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+.prose{max-width:68ch}
+.syr{font-family:"Noto Sans Syriac",serif;direction:rtl;unicode-bidi:isolate}
+.label{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.tbc{background:var(--tbc-bg);color:var(--tbc-ink);border-radius:4px;padding:0 .35em;font-size:.92em}
+.tbc::before{content:"✎ "}
+
+/* header & dropdown navigation */
+header{background:var(--nav);color:var(--nav-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.bar{display:flex;align-items:center;gap:20px;min-height:64px}
+.brand{display:flex;align-items:baseline;gap:10px;color:inherit;text-decoration:none;margin-right:auto}
+.brand b{font-family:Alegreya,serif;font-size:1.6rem;letter-spacing:.14em;font-weight:700}
+.brand span{font-size:.85rem;opacity:.75;white-space:nowrap}
+@media (max-width:1400px){ .brand span{display:none} }
+nav ul{list-style:none;margin:0;padding:0}
+.menu{display:flex;gap:2px;align-items:center}
+.menu>li{position:relative}
+.menu a,.menu button{display:block;white-space:nowrap;color:inherit;background:none;border:0;font:inherit;font-size:.98rem;padding:10px 12px;border-radius:6px;cursor:pointer;text-decoration:none}
+.menu .theme::after{display:none}
+.menu button::after{content:"";display:inline-block;margin-left:6px;border:4px solid transparent;border-top-color:currentColor;vertical-align:-1px}
+.menu a:hover,.menu button:hover,.menu [aria-current="page"],.menu button.cur{background:rgba(255,255,255,.12)}
+.sub{position:absolute;top:100%;left:0;min-width:230px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:6px;display:none}
+.sub a{color:var(--ink);font-size:.95rem}
+.sub a:hover,.sub a[aria-current="page"]{background:var(--soft)}
+li.open>.sub{display:block}
+@media (hover:hover) and (min-width:1021px){ li.dd:hover>.sub,li.dd:focus-within>.sub{display:block} }
+.burger{display:none;background:none;border:1px solid rgba(255,255,255,.35);color:inherit;border-radius:6px;padding:6px 10px;font:inherit;cursor:pointer}
+.theme{background:none;border:0;color:inherit;opacity:.8;cursor:pointer;font-size:1.1rem;padding:6px}
+@media (max-width:1020px){
+  .burger{display:block}
+  nav{position:absolute;left:0;right:0;top:100%;background:var(--nav);display:none;padding:8px 16px 16px;max-height:calc(100vh - 64px);overflow:auto}
+  nav.show{display:block}
+  .menu{flex-direction:column;align-items:stretch}
+  .menu a,.menu button{text-align:left}
+  .sub{position:static;display:block;box-shadow:none;border:0;background:transparent;padding:0 0 4px 14px}
+  .sub a{color:var(--nav-ink);opacity:.85}
+  .sub a:hover,.sub a[aria-current="page"]{background:rgba(255,255,255,.1)}
+  .menu .theme::after{display:none}
+.menu button::after{display:none}
+  .menu button{pointer-events:none;font-weight:700;opacity:.7;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding-bottom:2px}
+}
+
+/* pages */
+main{padding-block:48px 64px}
+.page{display:none} .page.on{display:block}
+.crumb{margin-bottom:18px}
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:center}
+.hero figure{margin:0}
+.hero img{width:100%;border-radius:4px;box-shadow:0 18px 40px rgba(60,40,20,.25);display:block}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:8px}
+.lede{font-size:1.2rem;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:40px 0}
+.facts div{background:var(--panel);padding:14px 18px}
+.facts b{display:block;font-family:Alegreya,serif;font-size:1.15rem;font-weight:500;font-variant-numeric:tabular-nums}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--rubric);border-radius:6px;padding:20px 22px;display:flex;flex-direction:column}
+.card p{color:var(--muted);flex:1}
+.card a.more{font-weight:700;text-decoration:none}
+.phases{list-style:none;padding:0;margin:24px 0;display:grid;gap:14px;counter-reset:ph}
+.phases li{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 20px 16px 64px;position:relative;counter-increment:ph}
+.phases li::before{content:counter(ph);position:absolute;left:20px;top:14px;font-family:Alegreya,serif;font-size:1.7rem;color:var(--rubric)}
+.obj{padding-left:1.2em} .obj li{margin-bottom:.6em}
+.status{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--rubric-soft);color:var(--rubric);border-radius:20px;padding:2px 10px;margin-bottom:8px}
+.news{border-left:3px solid var(--rubric);padding:4px 0 4px 18px;margin:0 0 22px}
+.news time{font-size:.85rem;color:var(--muted)}
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.syrbox{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:22px;margin:20px 0}
+.syrbox .syr{font-size:1.6rem;line-height:2.2;display:block;text-align:right}
+
+/* footer */
+footer{border-top:1px solid var(--line);background:var(--panel);padding-block:32px;font-size:.92rem;color:var(--muted)}
+.fund{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.eu{width:90px;height:60px;flex:none}
+.fund p{margin:0;max-width:70ch}
+.fund b{color:var(--ink)}
+.foot2{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+@media (max-width:760px){ .hero{grid-template-columns:1fr} .hero figure{max-width:300px;margin-inline:auto} main{padding-block:28px 48px} }
+
+.saintslinks{font-size:.95rem;color:var(--muted)}
+.triptych{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,3vw,32px);max-width:860px}
+.icon{margin:0;text-decoration:none;color:inherit;display:block}
+.icon .frame{aspect-ratio:3/4;border-radius:50% 50% 6px 6px/26% 26% 6px 6px;overflow:hidden;border:6px solid var(--gold);box-shadow:0 0 0 1px var(--gold-dark),0 14px 30px rgba(60,40,20,.22);background:linear-gradient(160deg,var(--gold-light),var(--gold) 55%,var(--gold-dark));position:relative;display:flex;align-items:center;justify-content:center}
+.icon .frame img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
+.icon .ph{text-align:center;color:#7a1f14;font-family:Alegreya,serif;letter-spacing:.06em;font-size:clamp(.7rem,1.6vw,.95rem);line-height:1.3;padding:12%}
+.icon .halo{width:46%;aspect-ratio:1;border-radius:50%;border:2px solid rgba(122,31,20,.55);margin:0 auto 14px;box-shadow:inset 0 0 0 6px rgba(255,255,255,.18)}
+.icon figcaption{text-align:center;margin-top:12px}
+.icon figcaption b{display:block;font-family:Alegreya,serif;font-weight:500;font-size:1.1rem;color:var(--ink)}
+a.icon:hover .frame{transform:translateY(-3px)} .icon .frame{transition:transform .2s}
+.svgframe img{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 10px 24px rgba(60,40,20,.25)}
+.svgframe svg{width:100%;height:auto;display:block;border-radius:8px;box-shadow:0 10px 24px rgba(60,40,20,.2)}
+.saint{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:48px;align-items:start}
+.saint>.icon figcaption{font-size:.8rem}
+.gk{font-family:Alegreya,serif;font-style:italic;color:var(--rubric);font-size:1.1rem}
+
+.edition{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:26px clamp(18px,4vw,40px);margin-top:26px;max-width:860px}
+.ed-head{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:18px}
+.syrtext{font-family:"Noto Sans Syriac",serif;font-size:1.55rem;line-height:2.3;text-align:justify;min-height:4em}
+.syrtext p{margin:0 0 .6em}
+.syrtext .rubric{color:var(--rubric);font-weight:600}
+sup.ref{font-family:"Alegreya Sans",sans-serif;font-size:.62rem;color:var(--muted);background:var(--soft);border-radius:3px;padding:0 3px;margin-inline:3px;vertical-align:super;line-height:1}
+.dates{font-family:"Alegreya Sans",sans-serif;font-size:.9rem;color:var(--muted);font-weight:400}
+.card.wide{grid-column:1/-1}
+.details{margin-top:-14px}
+.details dl{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:0 40px}
+.details dl div{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.details dt{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;padding-top:3px}
+.details dd{margin:0}
+.person{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;align-items:start;margin-top:10px}
+.portrait{aspect-ratio:4/5;background:var(--soft);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.pubs{padding-left:1.1em}.pubs li{margin-bottom:.5em}
+.inst{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+@media (max-width:640px){ .person{grid-template-columns:1fr} .portrait{max-width:180px} }
+.edition{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:0;max-width:none;padding:0;overflow:visible}
+.edition.closed{grid-template-columns:minmax(0,1fr) 0}
+.ed-main{padding:26px clamp(18px,4vw,40px);min-width:0}
+.ed-head{align-items:center}
+.apptoggle{background:var(--rubric-soft);color:var(--rubric);border:0;border-radius:20px;padding:4px 12px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer}
+.edition:not(.closed) .apptoggle span{display:inline-block;transform:rotate(180deg)}
+.drawer{border-left:1px solid var(--line);background:var(--bg);position:sticky;top:calc(64px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 80px);overflow:auto;padding:16px 18px;border-radius:0 6px 6px 0}
+.edition.closed .drawer{display:none}
+.dr-head{display:flex;justify-content:space-between;align-items:center;position:sticky;top:-16px;background:var(--bg);padding:4px 0 8px;margin-top:-4px}
+.dr-close{background:none;border:0;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+.dr-sig{font-size:.85rem;color:var(--muted);margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.applist{list-style:none;margin:0;padding:0;font-size:.92rem;line-height:1.55}
+.applist li{padding:7px 8px;border-radius:5px;cursor:pointer;border-bottom:1px dashed var(--line)}
+.applist li:hover{background:var(--soft)}
+.applist li.on{background:var(--rubric-soft);outline:1px solid var(--rubric)}
+.applist .an{display:inline-block;min-width:1.7em;color:var(--rubric);font-weight:700;font-variant-numeric:tabular-nums}
+.applist .syr{font-size:1.15rem;line-height:1.7}
+.applist .grc{font-family:Alegreya,serif}
+.applist i{color:var(--muted)}
+b.sg{font-family:Alegreya,serif;font-weight:700;letter-spacing:.02em}
+.syrtext .v{text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--rubric) 55%,transparent);text-decoration-thickness:1px;text-underline-offset:6px;cursor:pointer;border-radius:3px}
+.syrtext .v:hover,.syrtext .v.on{background:var(--rubric-soft);text-decoration-color:var(--rubric)}
+.edition.closed .syrtext .v{text-decoration:none}
+.ed-note{font-size:.88rem;color:var(--muted);margin-top:14px}
+@media (max-width:900px){
+  .edition,.edition.closed{grid-template-columns:1fr}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(88vw,380px);max-height:none;z-index:40;box-shadow:-12px 0 30px rgba(0,0,0,.25);border-radius:0;padding-top:calc(16px + env(safe-area-inset-top,0px))}
+  .edition:not(.open-m) .drawer{display:none}
+}
+.edition.textonly{display:block;max-width:900px}
+.portrait{overflow:hidden;border:0;background:none}.portrait img{width:100%;height:100%;object-fit:cover;display:block;border-radius:6px}
+.wits{list-style:none;padding:0}.wits li{padding:5px 0;border-bottom:1px solid var(--line)}.wits b.sg{display:inline-block;width:1.8em;color:var(--rubric)}
+.app{border-top:1px solid var(--line);margin-top:22px;padding-top:12px;font-size:.95rem}
+.sigla{margin-top:14px;font-size:.92rem;color:var(--muted)}
+@media (max-width:640px){ .saint{grid-template-columns:1fr} .saint>.icon{max-width:240px} .triptych{gap:10px} .icon figcaption b{font-size:.9rem} }
+</style>
+
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#home"><b>SAINTS</b><span>MSCA Global Fellowship</span></a>
+    <button class="burger" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" aria-label="Main">
+      <ul class="menu">
+        <li><a href="#home">Home</a></li>
+        <li class="dd"><button aria-expanded="false">The project</button>
+          <ul class="sub">
+            <li><a href="#overview">SAINTS</a></li>
+            <li><a href="#phases">Phases</a></li>
+            <li><a href="https://marie-sklodowska-curie-actions.ec.europa.eu/" target="_blank" rel="noopener">The MSCA Actions ↗</a></li>
+          </ul></li>
+        <li class="dd"><button aria-expanded="false">The saints</button>
+          <ul class="sub">
+            <li><a href="#symeon">Symeon the Holy Fool</a></li>
+            <li><a href="#john">John Calybites</a></li>
+            <li><a href="#gerasimos">Gerasimos of the Jordan</a></li>
+          </ul></li>
+        <li class="dd"><button aria-expanded="false">Texts</button>
+          <ul class="sub">
+            <li><a href="#sample">Syriac sample</a></li>
+          </ul></li>
+        <li class="dd"><button aria-expanded="false">People</button>
+          <ul class="sub">
+            <li><a href="#researcher">Researcher</a></li>
+            <li><a href="#supervisors">Supervisors</a></li>
+            <li><a href="#institutions">Institutions</a></li>
+          </ul></li>
+        <li class="dd"><button aria-expanded="false">Events</button>
+          <ul class="sub">
+            <li><a href="#upcoming">Upcoming events</a></li>
+            <li><a href="#news">News</a></li>
+          </ul></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><button class="theme" title="Light / dark" aria-label="Switch light or dark theme"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2a8 8 0 0 1 0 16z" fill="currentColor"/></svg></button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- HOME -->
+<section class="page" id="p-home">
+  <div class="hero">
+    <div>
+      <p class="label">Marie Skłodowska-Curie Actions · Horizon Europe</p>
+      <h1>Syriac Accounts Investigated through Novel Tools of Stemmatology</h1>
+      <p class="lede">Byzantine lives of saints in the Syriac tradition: their translation, their transmission in manuscripts, and their critical edition.</p>
+      <p class="saintslinks">The saints: <a href="#symeon">Symeon the Holy Fool</a> · <a href="#john">John Calybites</a> · <a href="#gerasimos">Gerasimos of the Jordan</a></p>
+    </div>
+    <figure>
+      <img src="ms_detail.jpg" alt="A page of a Syriac manuscript">
+      
+    </figure>
+  </div>
+  <div class="facts">
+    <div><span class="label">Duration</span><b>Sept 2026 – Aug 2029</b></div>
+    <div><span class="label">Scheme</span><b>MSCA Global Postdoctoral Fellowship</b></div>
+    <div><span class="label">Host</span><b>Sapienza University of Rome</b></div>
+    <div><span class="label">Grant agreement</span><b>No 101264992</b></div>
+  </div>
+  <div class="details">
+    <dl>
+      <div><dt>Fellow</dt><dd><a href="#researcher">Guido Venturini</a></dd></div>
+      <div><dt>Supervisors</dt><dd>Alberto Camplani (Sapienza) · Pablo Ubierna (UNIPE) · Angelo Del Grosso (CNR-ILC)</dd></div>
+      <div><dt>Department</dt><dd>History, Anthropology, Religions, Arts and Performing Arts (SARAS), Sapienza</dd></div>
+      <div><dt>Outgoing phase</dt><dd>Universidad Pedagógica Nacional (UNIPE), Buenos Aires</dd></div>
+      <div><dt>Secondment</dt><dd>CNR – Institute for Computational Linguistics, Pisa</dd></div>
+      <div><dt>Links</dt><dd><a href="https://cordis.europa.eu/project/id/101264992" target="_blank" rel="noopener">CORDIS</a> · <a href="https://www.uniroma1.it/en/node/538468" target="_blank" rel="noopener">Sapienza</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- PROJECT -->
+<section class="page" id="p-overview"><div class="prose">
+  <p class="label crumb">Project</p>
+  <h2>Overview</h2>
+  <p>Many lives of saints composed in Greek were translated into Syriac and copied for centuries in the monasteries of the Syriac Orthodox Church. In passing from one language and one community to another, these texts were adapted to new readers, and they went on changing from one manuscript to the next.</p>
+  <p>SAINTS studies the Syriac versions of three such lives: those of Symeon the Holy Fool, John Calybites and Gerasimos of the Jordan. It reads them alongside the Greek tradition, follows them through their manuscripts, and prepares their critical editions with English translations.</p>
+  <p>The project combines philology with digital approaches to the edition of texts and to stemmatology, the study of the relationships between manuscripts.</p>
+</div></section>
+
+<section class="page" id="p-phases"><div class="prose">
+  <p class="label crumb">Project</p>
+  <h2>Phases</h2>
+  <p>As a Global Fellowship, SAINTS takes place in three stages:</p>
+  <ol class="phases">
+    <li><h3>Buenos Aires · <span class="dates">Sept 2026 – Jan 2028</span></h3>Universidad Pedagógica Nacional (UNIPE), Argentina. Supervisor: Prof. Pablo Ubierna.</li>
+    <li><h3>Pisa · <span class="dates">Jan – Aug 2028</span></h3>Institute for Computational Linguistics “A. Zampolli”, National Research Council of Italy (CNR-ILC). Supervisor: Dr Angelo Del Grosso.</li>
+    <li><h3>Rome · <span class="dates">Sept 2028 – Aug 2029</span></h3>Sapienza University of Rome, Department of History, Anthropology, Religions, Arts and Performing Arts (SARAS), the host institution. Supervisor: Prof. Alberto Camplani.</li>
+  </ol>
+</div></section>
+
+<!-- SAINTS -->
+<section class="page" id="p-symeon"><div class="saint">
+  <figure class="icon"><div class="svgframe"><img src="img_symeon.jpg" alt="Symeon the Holy Fool"></div><figcaption style="color:var(--muted)"><span>Symeon (right) with his companion John. Russian icon (public domain).</span></figcaption></figure>
+  <div class="prose">
+    <p class="label crumb">The saints</p>
+    <h2>Symeon the Holy Fool</h2>
+    <p class="gk" lang="grc">Συμεὼν ὁ Σαλός · feast 21 July</p>
+    <p>According to his Greek <i>Life</i>, written in the mid-seventh century by Leontius, bishop of Neapolis in Cyprus, Symeon met his companion John on a pilgrimage from Syria to Jerusalem. On the way back the two entered the monastery of Abba Gerasimos by the Jordan, and then lived as hermits in the desert near the Dead Sea for twenty-nine years.</p>
+    <p>Symeon then went to Emesa (Homs, in Syria), where he lived as a “fool for Christ”, hiding his holiness behind absurd and scandalous behaviour until his death. The church historian Evagrius places him in the reign of Justinian. Leontius' work is the first full-length life of a holy fool.</p>
+  </div>
+</div></section>
+
+<section class="page" id="p-john"><div class="saint">
+  <figure class="icon"><div class="svgframe"><img src="img_john.jpg" alt="John Calybites"></div><figcaption style="color:var(--muted)"><span>John Calybites with the Gospel book. Imperial Menologion, Constantinople, 11th century. Baltimore, Walters Art Museum, W.521, fol. 96r (CC0).</span></figcaption></figure>
+  <div class="prose">
+    <p class="label crumb">The saints</p>
+    <h2>John Calybites</h2>
+    <p class="gk" lang="grc">Ἰωάννης ὁ Καλυβίτης · feast 15 January</p>
+    <p>John, called “the hut-dweller” (from <i>kalybē</i>, “hut”), is a saint of the fifth century. In the Greek tradition he is the son of a wealthy family of Constantinople who secretly left home as a boy to become a monk among the Akoimetoi, the “Sleepless” monks.</p>
+    <p>Years later he came back unrecognised and lived as a beggar in a hut at his parents' gate, revealing who he was only on his deathbed, through the Gospel book they had given him as a child. The Latin tradition sets the story in Rome, where a church on the Tiber Island bears his name.</p>
+  </div>
+</div></section>
+
+<section class="page" id="p-gerasimos"><div class="saint">
+  <figure class="icon"><div class="svgframe"><img src="img_gerasimos.jpg" alt="Gerasimos of the Jordan"></div><figcaption style="color:var(--muted)"><span>Gerasimos and the lion. Russian icon, 16th century (public domain).</span></figcaption></figure>
+  <div class="prose">
+    <p class="label crumb">The saints</p>
+    <h2>Gerasimos of the Jordan</h2>
+    <p class="gk" lang="grc">Γεράσιμος ὁ Ἰορδανίτης · feast 4 March</p>
+    <p>Gerasimos came from Lycia, in Asia Minor, where he first lived as a monk. He later settled in the desert by the Jordan, not far from Jericho, and founded a laura there; he died in 475. Cyril of Scythopolis relates that after the Council of Chalcedon (451) he at first followed its opponents, and that Euthymius won him over to the council's definition.</p>
+    <p>He is best remembered for the lion that he freed from a thorn in its paw and that then served his monastery, a story told by John Moschus in the <i>Spiritual Meadow</i>. His monastery also appears in the <i>Life of Symeon the Holy Fool</i>.</p>
+  </div>
+</div></section>
+
+<!-- TEXTS -->
+<section class="page" id="p-sample">
+  <div class="prose">
+    <p class="label crumb">Texts</p>
+    <h2>Syriac sample</h2>
+  </div>
+  <div class="edition textonly">
+    <div class="ed-main">
+      <div class="ed-head"><span class="label">Life of Symeon the Fool</span></div>
+      <div class="syrtext" lang="syc" dir="rtl"><p class="rubric">ܬܘܒ ܬܫܥܝܬܐ ܕܕܘܒܪ ܚ̈ܝܘܗܝ ܕܩܕܝܫܐ ܡܪܝ ܫܡܥܘܢ ܛܘܒܢܐ܆ ܗ̇ܘ ܕܡܛܠ ܡܫܝܚܐ ܐܬܩܪܝ ܣܠܘܣܐ܇ ܘܕܝܘܚܢܢ ܐܚܘܗܝ. ܨܠܘܬܗܘܢ ܥܡܢ. ܕܐܬܟܬܒܬ ܡܢ ܠܐܘܢܛܝܘܣ ܐܦܝܣܩܘܦܐ ܕܢܐܦܘܠܝܣ ܕܩܘܦܪܘܣ.</p><p><sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">83.3</sup> ܐܝܠܝܢ ܕܕܘܒܪ̈ܐ ܐܠܗ̈ܝܐ ܠܐܚܪ̈ܢܐ ܡܚ̇ܦܛܝܢ ܠܡܫܬ̇ܥܝܘ: ܙ̇ܕܩ ܠܗܘܢ ܕܗ̣ܢܘܢ ܩܕܡܐܝܬ ܢܡܪܘܢ ܒܗܘܢ. ܘܕܡܘܬܐ ܠܐܚܪ̈ܢܐ ܢܗܘܘܢ. ܐܝܟ ܡܠܬܐ ܐܠܗܝܬܐ ܕܐܡܪܐ ܕܗܟܢܐ ܢܢܗܪ ܢܘܗܪܟܘܢ ܩܕܡ ܒܢܝ̈ܢܫܐ܆ ܐ̇ܝܟܢܐ ܕܢܚ̣ܙܘܢ ܥ̇ܒ̈ܕܝܟܘܢ ܛ̈ܒܐ̣ ܘܢܫ̇ܒܚܘܢ ܠܐܒܘܟܘܢ ܕܒܫܡܝܐ܀</p><p> ܐܝܬ ܓܝܪ ܣ̈ܓܝܐܐ ܕܩܕܡ ܕܠܢܦܫܗܘܢ <sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">110.3</sup> ܢܐܠܦܘܢ܆ ܠܐܚܪ̈ܢܐ ܨ̇ܒܝܢ ܕܢܟ̇ܘܢܘܢ. ܘܫܒ̣ܩܘ ܕܥܠ ܡ̈ܝܬܐ ܕܝܠܗܘܢ ܢܒ̣ܟܘܢ܆ ܘܒܝܘܠܦܢܐ ܕܐܚܪ̈ܢܐ̣ ܪܢܘ ܘܐܬܡܠܝܬ ܥܠܝܗܘܢ ܡܠܬܐ ܡܐܚܝܢܝܬܐ ܘܕܫ̇ܘܝܐ ܠܕܘܡܪܐ ܕܡܪܐܟܠ ܕܐܡ̇ܪܐ. ܕܟܠ ܕܠܐ ܢܥ̣ܒܕ ܘܢ̇ܠܦ܆ ܗܢܐ̣ ܙܥܘܪܐ ܢܬܩ̣ܪܐ ܒܡ̇ܠܟܘܬܐ ܕܫܡܝܐ܀</p><p> ܘܬܘܒ܆ ܢ̇ܣܒ ܒܐ̈ܦܐ܇ ܐܦ̣ܩ ܠܘܩܕܡ ܩ̇ܪܝܬܐ ܡܢ ܥܝܢܟ. ܘܗ̇ܝܕܝܢ ܢܬܒ̣ܚܪ ܠܟ ܠܡ̇ܦܩܘ ܓ̣ܠܐ ܡܢ ܥܝܢܗ ܕܐܚܘܟ. ܘܬܘܒ ܦܘܠܘܣ ܫܠܝܚܐ ܐܠܗܝܐ ܘܡ̇ܐܢܐ ܓܒܝ̣ܐ ܟܕ ܡܟܘܢ ܠܪ̈ܘܡܝܐ ܒܐܓܪܬܐ ܕܟܬ̣ܒ ܠܗܘܢ܆ ܗܟܢܐ ܐܡ̣ܪ. ܕܐܘ ܕܠܐܚܪ̈ܢܐ ܡ̇ܠܦ܆ ܠܢܦܫܟ܆ ܠܐ ܡ̇ܠܦ ܐܢܬ. ܐܠܐ ܒܝܕ ܕܡܢ ܟܠܗܝܢ ܡܝܬܪ̈ܬܐ ܐܝܬܝܢ ܥܪܛ̈ܠܝܐ: ܒܝܕ ܡܗܡܝܢܘܬܐ ܕܐܡܝܢܐܝܬ ܩܢܝܢܢ. ܢܕܢܚ ܩܕܡܝܟܘܢ ܕܘܒܪ̈ܐ ܫ̈ܒܝܚܐ ܕܩ̈ܕܝܫܐ. ܘܢܩܪܒ ܠܟܘܢ ܡܢ ܥܡ̈ܠܐ ܘܕܘܥ̈ܬܐ ܕܐܚܪ̈ܢܐ̣ ܡܐܟܘܠܬܐ ܕܠܐ ܐܒܕܐ܆ ܐܠܐ ܕܡܩܘܝܐ ܘܕܡܕܒܪܐ ܠܢܦܫ̈ܬܟܘܢ ܠܚ̈ܝܐ ܕܠܥܠܡ. ܠܚܡܐ ܡ̇ܢ ܓܝܪ ܣ̇ܡܟ ܠܒܗ ܕܒܪܢܫܐ܆ ܡܠܬܐ ܕܝܢ ܕܐܠܗܐ ܠܘܬ ܕܘܒܪ̈ܐ ܐܠܗ̈ܝܐ ܘܫ̈ܒܝܚܐ ܠܢܦܫܐ ܢܬܦܐ. <sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">139.1</sup> ܐܝܟܢܐ ܕܒܪܚܡܬܐ ܐܠܗܝܬܐ ܠܡܐܝܢܘܬܐ ܕܢܦܫܐ ܢܫܕܐ <sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">160.2</sup> ܡܢܢ܆ ܘܢܪܕܐ ܒܐܘܪܚܐ ܐܠܝܨܬܐ ܘܩܛܝܢܬܐ ܠܚ̈ܝܐ ܕܠܥܠܡ. ܗ̇ܝ ܕܐܦ ܠܚܐܪܘܬܢ ܘܨܒܝܢܢ܆ ܢܩܝܦܐ ܘܕܠܝܠܐ. ܕܐܘ ܒܪܚܡܬܐ ܘܛܘܥܝܝ ܕܐܝܠܝܢ ܕܥܒܪ̈ܢ܆ ܢܚܠܦ ܗܠܝܢ ܕܠܐ ܥܒܪ̈ܢ ܘܠܐ ܡܫܬܪ̈ܝܢ. ܐܘ ܒܪܓܬܐ ܘܒܚܘܝܚܘܬܐ ܚܠܦ ܗܠܝܢ ܕܥܒܪ̈ܢ ܘܡܬܚ̈ܒܠܢ܇ ܢܩܢܐ ܘܢܓܒܐ ܠܢ ܛܒ̈ܬܐ ܕܠܐ ܡܬܚ̈ܒܠܢ ܘܠܐ ܒ̈ܠܝܢ. ܘܕܫܪ̈ܝܪܢ ܗܠܝܢ ܕܐܬܐܡܪ̈ܝ܆ ܗܐ ܡܟܣ̇ܝܢ ܠܢ ܟܠܗܘܢ ܒܢܝ̈ܢܫܐ ܐܝܠܝܢ ܕܡܢ ܒܪܝܫܝܬ ܫܦܪܘ ܠܐܠܗܐ. ܐܝܠܝܢ ܕܐܦ ܗܢܘܢ ܟܝܢܢ ܡܥܛܦܝܢ ܗܘܘ.܀</p><p> ܘܝܬܝܪܐܝܬ ܕܐܦ ܥܡ̈ܘܕܐ ܢܗܝܪ̈ܐ. ܕܒܙܒܢܐ ܕܝܠܢ ܐܬܚ̣ܙܝܘ. ܕܚܕ ܡܢܗܘܢ ܐܝܬܘܗܝ܆ ܫܡܥܘܢ ܛܘܒܢܐ. ܕܡܢ ܣ̈ܓܝܐܐ ܟܚܝܕ ܗܘܐ ܘܢܟܦ. ܒܝܕ ܕܠܗܢܐ ܟܠܗ ܪܘܡܐ ܕܕܟܝܘܬܐ ܘܠܐ ܚܫܘܫܘܬܐ ܐܬܡܛܝ܆ <sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">110.4</sup> ܘܐܝܠܝܢ ܕܠܚ̈ܫܐ ܘܠܪ̈ܓܝܓܬܐ ܦܓܪ̈ܢܝܬܐ ܡܫܥܒܕܝܢ܆ ܘܪܦܝܘܬܐ ܘܟܫܠܐ ܡܣܬܒܪ̈ܢ ܕܐܝܬܝܗܝܢ܆ ܡܢ ܕܘܒܪ̈ܐ ܕܡܝܬܪܘܬܐ ܒܗܘܢ ܒܗܠܝܢ ܗܢܐ ܛܘܒܢܐ܆ ܐܝܟ ܡܪܓܢܝܬܐ ܒܣܝܢܐ ܐܬܗܦܟ. ܐܡ̇ܪ ܐܢܐ ܕܝܢ ܒܡܕܒܪܢܘܬܗ ܕܒܡܕܝܢܬܐ. ܘܡܬܗܦܟܢܘܬܗ ܕܥܡ ܢܫ̈ܐ. ܘܛܘܥܝܝ ܕܥܠܡܐ ܗܢܐ. ܟܕ ܚ̣ܦܝܛ ܗܘܐ ܕܢܚܘܐ ܠܙܥܘܪ̈ܝ ܗܝܡܢܘܬܐ ܚܝܠܐ ܐܠܗܝܐ. ܕܠܐܝܠܝܢ ܕܒܦܪܘܫܘܬܐ ܘܒܗܝܡܢܘܬܐ ܫܪܝܪܬܐ ܡܬܕܒܪܝܢ ܠܘܩܒܠ <sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">161.1</sup> ܪ̈ܘܚܐ ܒܝܫ̈ܬܐ܀</p><p> ܡܦܝܣ ܐܢܐ ܕܝܢ ܠܟܠܗܘܢ ܐܝܠܝܢ ܕܡܬܗܓܝܢ ܒܬܫܥܝܬܐ ܗܕܐ ܡܠܐܟܝܬܐ ܕܒܕܚܠܬ ܐܠܗܐ ܠܐܝܠܝܢ ܕܐܡܝܪ̈ܢ ܢܣܬܟܠܘܢ. ܘܒܗܝܡܢܘܬܐ ܐܝܕܐ ܕܝ̇ܐܝܐ ܠܡܗ̈ܝܡܢܐ ܫܪܝܪ̈ܐ. ܝܕܝܥܝܢܢ ܓܝܪ ܕܠܟܦܘܪ̈ܐ ܘܫ̈ܛܝܐ܆ ܐܝܟ ܡܬ̈ܠܐ ܘܕܡ̈ܠܝܢ ܓܘܚܟܐ ܡܣܬܒܪ̈ܢ ܕܐܝܬܝܗܝܢ. ܘܐܠܘ ܓܝܪ ܐܣܬܟܠܘ: <sup class="ref" dir="ltr" title="Beginning of a folio in one of the manuscripts">28.1</sup> ܐܝܠܝܢ ܕܡܢ ܫܠܝܚܐ ܐܠܗܝܐ ܐܬܐܡܪ̈ܝ</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section class="page" id="p-publications"><div class="prose">
+  <h2>Publications</h2>
+  <p>Publications of the project will be listed here as they appear. In line with the Horizon Europe rules, they will be available in open access, including through IRIS, the institutional repository of Sapienza University of Rome.</p>
+</div></section>
+
+<!-- EVENTS -->
+<section class="page" id="p-upcoming"><div class="prose">
+  <p class="label crumb">Events</p>
+  <h2>Upcoming events</h2>
+  <article class="news"><time datetime="2027-11-25">25–26 November 2027</time><h3>From Byzantium to the Christian East: Hagiography in Translation</h3><p>Buenos Aires Conference on Syriac Hagiography. Universidad Pedagógica Nacional (UNIPE), Buenos Aires.</p></article>
+</div></section>
+
+<!-- NEWS -->
+<section class="page" id="p-news"><div class="prose">
+  <p class="label crumb">Events</p>
+  <h2>News</h2>
+  <article class="news"><time datetime="2026-09-01">September 2026</time><h3>The project starts</h3><p>SAINTS begins at the Universidad Pedagógica Nacional (UNIPE) in Buenos Aires.</p></article>
+</div></section>
+
+<!-- PEOPLE -->
+<section class="page" id="p-researcher">
+  <p class="label crumb">People and institutions</p>
+  <h2>Researcher</h2>
+  <div class="person">
+    <div class="portrait"><img src="portrait.jpg" alt="Guido Venturini"></div>
+    <div class="prose">
+      <h3>Guido Venturini</h3>
+      <p class="label">Principal investigator · Marie Skłodowska-Curie Fellow</p>
+      <p>Guido Venturini is a philologist working on Greek and Syriac texts of Late Antiquity, with a focus on textual criticism, hagiography and early Christian literature. Trained in Classical Philology, he received his PhD in Syriac and Byzantine philology from Sapienza University of Rome (2019) with a thesis on the Syriac version of the <i>Life of John the Merciful</i>, which he then edited and translated in the <i>Corpus Scriptorum Christianorum Orientalium</i> (Louvain). He held postdoctoral positions at the universities of Louvain, Buenos Aires and Venice, working with the GREgORI project and the ERC project FLOS, for which he published the critical edition of the anti-Julianist florilegium (Leiden, 2026). He has taught Greek and Latin language and culture at university level in Argentina and Humanities in Italian secondary schools.</p>
+      <p class="links"><a href="https://unive.academia.edu/GuidoVenturini" target="_blank" rel="noopener">Academia.edu ↗</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="p-supervisors">
+  <p class="label crumb">People and institutions</p>
+  <h2>Supervisors</h2>
+  <div class="people">
+    <div class="card"><span class="label">Supervisor · Sapienza University of Rome</span><h3>Alberto Camplani</h3><p>Department of History, Anthropology, Religions, Arts and Performing Arts (SARAS).</p></div>
+    <div class="card"><span class="label">Supervisor · UNIPE, Buenos Aires</span><h3>Pablo Ubierna</h3><p>Universidad Pedagógica Nacional, Buenos Aires.</p></div>
+    <div class="card"><span class="label">Supervisor · CNR-ILC, Pisa</span><h3>Angelo Del Grosso</h3><p>Institute for Computational Linguistics “A. Zampolli”.</p></div>
+  </div>
+</section>
+
+<section class="page" id="p-institutions">
+  <p class="label crumb">People and institutions</p>
+  <h2>Institutions</h2>
+  <div class="inst">
+    <div class="card"><span class="label">Host institution</span><h3>Sapienza University of Rome</h3><p>Department of History, Anthropology, Religions, Arts and Performing Arts (SARAS).</p><a class="more" href="https://www.uniroma1.it/en" target="_blank" rel="noopener">uniroma1.it ↗</a></div>
+    <div class="card"><span class="label">Outgoing phase</span><h3>Universidad Pedagógica Nacional (UNIPE)</h3><p>Buenos Aires, Argentina.</p><a class="more" href="https://unipe.edu.ar" target="_blank" rel="noopener">unipe.edu.ar ↗</a></div>
+    <div class="card"><span class="label">Secondment</span><h3>CNR – Institute for Computational Linguistics “A. Zampolli”</h3><p>National Research Council of Italy, Pisa.</p><a class="more" href="https://www.ilc.cnr.it" target="_blank" rel="noopener">ilc.cnr.it ↗</a></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="page" id="p-contact"><div class="prose">
+  <h2>Contact</h2>
+  <p><b>Guido Venturini</b><br>Sapienza University of Rome, Department SARAS<br><a href="mailto:guido.venturini@uniroma1.it">guido.venturini@uniroma1.it</a><br><a href="mailto:venturini.guido89@gmail.com">venturini.guido89@gmail.com</a></p>
+</div></section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fund">
+      <svg class="eu" viewBox="0 0 300 200" role="img" aria-label="Flag of the European Union"><rect width="300" height="200" fill="#003399"/><g fill="#FFCC00"><polygon points="150.00,22.22 147.51,29.90 139.43,29.90 145.96,34.64 143.47,42.32 150.00,37.58 156.53,42.32 154.04,34.64 160.57,29.90 152.49,29.90"/><polygon points="183.33,31.15 180.84,38.83 172.77,38.83 179.30,43.58 176.80,51.25 183.33,46.51 189.86,51.25 187.37,43.58 193.90,38.83 185.83,38.83"/><polygon points="207.74,55.56 205.24,63.23 197.17,63.23 203.70,67.98 201.20,75.66 207.74,70.91 214.27,75.66 211.77,67.98 218.30,63.23 210.23,63.23"/><polygon points="216.67,88.89 214.17,96.57 206.10,96.57 212.63,101.31 210.14,108.99 216.67,104.24 223.20,108.99 220.70,101.31 227.23,96.57 219.16,96.57"/><polygon points="207.74,122.22 205.24,129.90 197.17,129.90 203.70,134.64 201.20,142.32 207.74,137.58 214.27,142.32 211.77,134.64 218.30,129.90 210.23,129.90"/><polygon points="183.33,146.62 180.84,154.30 172.77,154.30 179.30,159.05 176.80,166.72 183.33,161.98 189.86,166.72 187.37,159.05 193.90,154.30 185.83,154.30"/><polygon points="150.00,155.56 147.51,163.23 139.43,163.23 145.96,167.98 143.47,175.66 150.00,170.91 156.53,175.66 154.04,167.98 160.57,163.23 152.49,163.23"/><polygon points="116.67,146.62 114.17,154.30 106.10,154.30 112.63,159.05 110.14,166.72 116.67,161.98 123.20,166.72 120.70,159.05 127.23,154.30 119.16,154.30"/><polygon points="92.26,122.22 89.77,129.90 81.70,129.90 88.23,134.64 85.73,142.32 92.26,137.58 98.80,142.32 96.30,134.64 102.83,129.90 94.76,129.90"/><polygon points="83.33,88.89 80.84,96.57 72.77,96.57 79.30,101.31 76.80,108.99 83.33,104.24 89.86,108.99 87.37,101.31 93.90,96.57 85.83,96.57"/><polygon points="92.26,55.56 89.77,63.23 81.70,63.23 88.23,67.98 85.73,75.66 92.26,70.91 98.80,75.66 96.30,67.98 102.83,63.23 94.76,63.23"/><polygon points="116.67,31.15 114.17,38.83 106.10,38.83 112.63,43.58 110.14,51.25 116.67,46.51 123.20,51.25 120.70,43.58 127.23,38.83 119.16,38.83"/></g></svg>
+      <p><b>Funded by the European Union.</b> This project has received funding from the European Union's Horizon Europe research and innovation programme under the Marie Skłodowska-Curie grant agreement No 101264992. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Research Executive Agency (REA). Neither the European Union nor the granting authority can be held responsible for them.</p>
+    </div>
+    <div class="foot2">
+      <span>SAINTS · Sapienza University of Rome</span>
+      <span><a href="#contact">Contact</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const pages=[...document.querySelectorAll('.page')].map(s=>s.id.slice(2));
+  const nav=document.getElementById('nav'), burger=document.querySelector('.burger');
+  function show(){
+    let id=(location.hash||'#home').slice(1); if(!pages.includes(id)) id='home';
+    document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+id));
+    document.querySelectorAll('.menu a').forEach(a=>a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+id) || (a.getAttribute('href')==='#'+id && a.setAttribute('aria-current','page')));
+    document.querySelectorAll('.menu a[aria-current]').forEach(a=>a.setAttribute('aria-current','page'));
+    document.querySelectorAll('li.dd').forEach(li=>{ li.querySelector('button').classList.toggle('cur',!!li.querySelector('a[href="#'+id+'"]')); li.classList.remove('open'); li.querySelector('button').setAttribute('aria-expanded','false'); });
+    const h=document.querySelector('.page.on h1, .page.on h2'); document.title=(id==='home'?'SAINTS – Syriac Accounts Investigated through Novel Tools of Stemmatology':(h?h.textContent+' – SAINTS':'SAINTS'));
+    nav.classList.remove('show'); burger.setAttribute('aria-expanded','false');
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show); show();
+  document.querySelectorAll('li.dd>button').forEach(b=>b.addEventListener('click',e=>{
+    const li=b.parentElement, open=!li.classList.contains('open');
+    document.querySelectorAll('li.dd').forEach(x=>{x.classList.remove('open');x.querySelector('button').setAttribute('aria-expanded','false');});
+    li.classList.toggle('open',open); b.setAttribute('aria-expanded',String(open)); e.stopPropagation(); }));
+  document.addEventListener('click',e=>{ if(!e.target.closest('li.dd')) document.querySelectorAll('li.dd').forEach(x=>{x.classList.remove('open');x.querySelector('button').setAttribute('aria-expanded','false');}); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('li.dd').forEach(x=>x.classList.remove('open')); });
+  burger.addEventListener('click',()=>{ const o=nav.classList.toggle('show'); burger.setAttribute('aria-expanded',String(o)); });
+  const root=document.documentElement;
+  try{ const t=localStorage.getItem('saints-theme'); if(t) root.dataset.theme=t; }catch(e){}
+  document.querySelector('.theme').addEventListener('click',()=>{
+    const dark=root.dataset.theme? root.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme=dark?'light':'dark'; try{localStorage.setItem('saints-theme',root.dataset.theme);}catch(e){} });
+})();
+
+(function(){
+  const ed=document.getElementById('ed'); if(!ed) return;
+  const tog=ed.querySelector('.apptoggle'), dr=document.getElementById('drawer');
+  const mobile=()=>matchMedia('(max-width:900px)').matches;
+  function setOpen(o){ if(mobile()){ ed.classList.toggle('open-m',o); } else { ed.classList.toggle('closed',!o); } tog.setAttribute('aria-expanded',String(o)); }
+  if(mobile()) setOpen(false);
+  tog.addEventListener('click',()=>setOpen(tog.getAttribute('aria-expanded')!=='true'));
+  ed.querySelector('.dr-close').addEventListener('click',()=>setOpen(false));
+  function pick(n,from){
+    ed.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));
+    const v=ed.querySelector('.v[data-n="'+n+'"]'), li=document.getElementById('a'+n);
+    if(v) v.classList.add('on'); if(li) li.classList.add('on');
+    if(from==='text'){ setOpen(true); if(li){ const top=li.getBoundingClientRect().top-dr.getBoundingClientRect().top+dr.scrollTop-70; dr.scrollTo({top,behavior:'smooth'}); } }
+    if(from==='app'&&v){ v.scrollIntoView({block:'center',behavior:'smooth'}); if(mobile()) setOpen(false); }
+  }
+  ed.querySelectorAll('.v').forEach(v=>{ v.addEventListener('click',()=>pick(v.dataset.n,'text')); v.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(v.dataset.n,'text'); } }); });
+  ed.querySelectorAll('.applist li').forEach(li=>li.addEventListener('click',()=>pick(li.dataset.n,'app')));
+})();
+</script>
+
+</body>
+</html>
